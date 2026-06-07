@@ -175,6 +175,7 @@ speaker:
     audio_dac: es8311_dac
     buffer_duration: 100ms
 
+
 media_player:
   - platform: speaker
     name: None
