@@ -783,86 +783,100 @@ display:
     pages:
       - id: idle_page
         lambda: |-
-          float soc = id(bms_soc).has_state() ? id(bms_soc).state : 0;
-          float voltage = id(bms_voltage).has_state() ? id(bms_voltage).state : 0;
-          float current = id(bms_current).has_state() ? id(bms_current).state : 0;
-          float power = id(bms_power).has_state() ? id(bms_power).state : 0;
-          float temp = id(bms_temp).has_state() ? id(bms_temp).state : 0;
-          float delta = id(bms_delta).has_state() ? id(bms_delta).state : 0;
+          float soc       = id(bms_soc).has_state()       ? id(bms_soc).state       : 0;
+          float voltage   = id(bms_voltage).has_state()   ? id(bms_voltage).state   : 0;
+          float current   = id(bms_current).has_state()   ? id(bms_current).state   : 0;
+          float power     = id(bms_power).has_state()     ? id(bms_power).state     : 0;
+          float temp      = id(bms_temp).has_state()      ? id(bms_temp).state      : 0;
+          float delta     = id(bms_delta).has_state()     ? id(bms_delta).state     : 0;
           float cell_high = id(bms_cell_high).has_state() ? id(bms_cell_high).state : 0;
-          float cell_low = id(bms_cell_low).has_state() ? id(bms_cell_low).state : 0;
-          float health = id(bms_health).has_state() ? id(bms_health).state : 100;
-          bool charging = id(bms_charging).has_state() ? id(bms_charging).state : false;
-          bool balancing = id(bms_balancer).has_state() ? id(bms_balancer).state : false;
-          bool problem = id(bms_problem).has_state() ? id(bms_problem).state : false;
+          float cell_low  = id(bms_cell_low).has_state()  ? id(bms_cell_low).state  : 0;
+          float health    = id(bms_health).has_state()    ? id(bms_health).state    : 100;
+          bool charging   = id(bms_charging).has_state()  ? id(bms_charging).state  : false;
+          bool balancing  = id(bms_balancer).has_state()  ? id(bms_balancer).state  : false;
+          bool problem    = id(bms_problem).has_state()   ? id(bms_problem).state   : false;
 
           int W = 320, H = 240, CX = 160, CY = 118;
           it.fill(Color::BLACK);
 
+          // Arc helper lambda
+          auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick=3) {
+            int span = ea - sa;
+            if (span < 0) span += 360;
+            if (span == 0) span = 360;
+            for (int i = 0; i <= span; i++) {
+              float a = (sa + i) * M_PI / 180.0f;
+              for (int t = 0; t < thick; t++) {
+                it.draw_pixel_at(cx+(int)(cosf(a)*(r-t)), cy+(int)(sinf(a)*(r-t)), col);
+              }
+            }
+          };
+
           Color soc_color;
-          if (soc > 60) soc_color = Color(0, 255, 100);
-          else if (soc > 30) soc_color = Color(255, 200, 0);
-          else soc_color = Color(255, 60, 0);
+          if (soc > 60)       soc_color = Color(0, 255, 100);
+          else if (soc > 30)  soc_color = Color(255, 200, 0);
+          else                soc_color = Color(255, 60, 0);
 
           Color delta_color;
-          if (delta < 0.010) delta_color = Color(0, 220, 255);
+          if (delta < 0.010)      delta_color = Color(0, 220, 255);
           else if (delta < 0.030) delta_color = Color(0, 200, 100);
           else if (delta < 0.060) delta_color = Color(255, 200, 0);
-          else delta_color = Color(255, 60, 0);
+          else                    delta_color = Color(255, 60, 0);
 
           Color temp_color;
-          if (temp < 35) temp_color = Color(0, 200, 255);
+          if (temp < 35)      temp_color = Color(0, 200, 255);
           else if (temp < 45) temp_color = Color(255, 200, 0);
-          else temp_color = Color(255, 60, 0);
+          else                temp_color = Color(255, 60, 0);
 
           Color pwr_color = charging ? Color(0, 255, 150) : Color(255, 140, 0);
 
           // RING 1 — SOC r=108
           int soc_deg = (int)(soc / 100.0f * 360);
-          it.arc(CX, CY, 108, 270, (270 + soc_deg) % 360, soc_color);
-          it.arc(CX, CY, 108, (270 + soc_deg) % 360, 270, Color(30, 30, 30));
+          draw_arc(CX, CY, 108, 270, (270+soc_deg)%360, soc_color, 4);
+          draw_arc(CX, CY, 108, (270+soc_deg)%360, 270, Color(30,30,30), 4);
           for (int i = 0; i < 10; i++) {
-            float a = ((i / 10.0f) * 2 * M_PI) - (M_PI / 2);
-            it.line(CX+(int)(cosf(a)*111),CY+(int)(sinf(a)*111),CX+(int)(cosf(a)*118),CY+(int)(sinf(a)*118),Color(0,140,200));
+            float a = ((i/10.0f)*2*M_PI)-(M_PI/2);
+            it.line(CX+(int)(cosf(a)*111),CY+(int)(sinf(a)*111),
+                    CX+(int)(cosf(a)*118),CY+(int)(sinf(a)*118), Color(0,140,200));
           }
 
           // RING 2 — Voltage r=96
-          float v_pct = (voltage - 24.0f) / (29.2f - 24.0f);
-          v_pct = v_pct < 0 ? 0 : v_pct > 1 ? 1 : v_pct;
-          it.arc(CX, CY, 96, 270, (270+(int)(v_pct*360))%360, Color(0,180,255));
-          it.arc(CX, CY, 96, (270+(int)(v_pct*360))%360, 270, Color(20,20,40));
+          float v_pct = (voltage-24.0f)/(29.2f-24.0f);
+          v_pct = v_pct<0?0:v_pct>1?1:v_pct;
+          draw_arc(CX,CY,96,270,(270+(int)(v_pct*360))%360,Color(0,180,255),3);
+          draw_arc(CX,CY,96,(270+(int)(v_pct*360))%360,270,Color(20,20,40),3);
 
           // RING 3 — Power r=82
-          float pwr_pct = fabs(power) / 2000.0f;
-          pwr_pct = pwr_pct > 1 ? 1 : pwr_pct;
-          it.arc(CX, CY, 82, 270, (270+(int)(pwr_pct*360))%360, pwr_color);
-          it.arc(CX, CY, 82, (270+(int)(pwr_pct*360))%360, 270, Color(20,20,20));
+          float pwr_pct = fabsf(power)/2000.0f;
+          pwr_pct = pwr_pct>1?1:pwr_pct;
+          draw_arc(CX,CY,82,270,(270+(int)(pwr_pct*360))%360,pwr_color,3);
+          draw_arc(CX,CY,82,(270+(int)(pwr_pct*360))%360,270,Color(20,20,20),3);
 
           // RING 4 — Delta r=68
-          float delta_pct = 1.0f - (delta / 0.1f);
-          delta_pct = delta_pct < 0 ? 0 : delta_pct > 1 ? 1 : delta_pct;
-          it.arc(CX, CY, 68, 270, (270+(int)(delta_pct*360))%360, delta_color);
-          it.arc(CX, CY, 68, (270+(int)(delta_pct*360))%360, 270, Color(20,20,20));
+          float delta_pct = 1.0f-(delta/0.1f);
+          delta_pct = delta_pct<0?0:delta_pct>1?1:delta_pct;
+          draw_arc(CX,CY,68,270,(270+(int)(delta_pct*360))%360,delta_color,3);
+          draw_arc(CX,CY,68,(270+(int)(delta_pct*360))%360,270,Color(20,20,20),3);
 
           // RING 5 — Temperature r=54
-          float temp_pct = (temp - 20.0f) / 40.0f;
-          temp_pct = temp_pct < 0 ? 0 : temp_pct > 1 ? 1 : temp_pct;
-          it.arc(CX, CY, 54, 270, (270+(int)(temp_pct*360))%360, temp_color);
-          it.arc(CX, CY, 54, (270+(int)(temp_pct*360))%360, 270, Color(15,15,15));
+          float temp_pct = (temp-20.0f)/40.0f;
+          temp_pct = temp_pct<0?0:temp_pct>1?1:temp_pct;
+          draw_arc(CX,CY,54,270,(270+(int)(temp_pct*360))%360,temp_color,3);
+          draw_arc(CX,CY,54,(270+(int)(temp_pct*360))%360,270,Color(15,15,15),3);
 
           // RING 6 — Health r=40
-          float health_pct = health / 100.0f;
-          it.arc(CX, CY, 40, 270, (270+(int)(health_pct*360))%360, Color(0,160,255));
-          it.arc(CX, CY, 40, (270+(int)(health_pct*360))%360, 270, Color(10,10,10));
+          float health_pct = health/100.0f;
+          draw_arc(CX,CY,40,270,(270+(int)(health_pct*360))%360,Color(0,160,255),3);
+          draw_arc(CX,CY,40,(270+(int)(health_pct*360))%360,270,Color(10,10,10),3);
 
           // Core
           Color core_color = problem ? Color(255,0,0) : Color(0,220,255);
-          it.filled_circle(CX, CY, 10, core_color);
-          it.filled_circle(CX, CY, 5, Color::WHITE);
+          it.filled_circle(CX,CY,10,core_color);
+          it.filled_circle(CX,CY,5,Color::WHITE);
 
           // Corner brackets
           int b = 14;
-          it.line(6,6+b,6,6,Color(0,180,255)); it.line(6,6,6+b,6,Color(0,180,255));
+          it.line(6,6+b,6,6,Color(0,180,255));    it.line(6,6,6+b,6,Color(0,180,255));
           it.line(W-6,6+b,W-6,6,Color(0,180,255)); it.line(W-6,6,W-6-b,6,Color(0,180,255));
           it.line(6,H-6-b,6,H-6,Color(0,180,255)); it.line(6,H-6,6+b,H-6,Color(0,180,255));
           it.line(W-6,H-6-b,W-6,H-6,Color(0,180,255)); it.line(W-6,H-6,W-6-b,H-6,Color(0,180,255));
@@ -898,9 +912,9 @@ display:
           // Bottom status
           it.printf(CX, H-8, id(font_response), Color(0,140,200), TextAlign::CENTER,
             "%s  %s  %s",
-            charging ? "CHG" : "DCH",
+            charging  ? "CHG" : "DCH",
             balancing ? "BAL" : "   ",
-            problem ? "ERR!" : "OK"
+            problem   ? "ERR!" : "OK"
           );
 
           id(draw_timer_timeline).execute();
@@ -908,84 +922,119 @@ display:
 
       - id: listening_page
         lambda: |-
+          auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick=3) {
+            int span = ea-sa; if(span<0)span+=360; if(span==0)span=360;
+            for(int i=0;i<=span;i++){float a=(sa+i)*M_PI/180.0f;for(int t=0;t<thick;t++)it.draw_pixel_at(cx+(int)(cosf(a)*(r-t)),cy+(int)(sinf(a)*(r-t)),col);}
+          };
           it.fill(Color::BLACK);
-          it.printf(160, 80, id(font_timer), Color(0,255,180), TextAlign::CENTER, "LISTENING");
-          it.printf(160, 115, id(font_response), Color(0,200,150), TextAlign::CENTER, "V.I.K.I");
-          // Decorative arcs
-          it.arc(160, 118, 60, 200, 340, Color(0,255,180));
-          it.arc(160, 118, 70, 200, 340, Color(0,200,140));
-          it.arc(160, 118, 80, 200, 340, Color(0,160,110));
-          it.printf(160, 190, id(font_response), Color(0,180,130), TextAlign::CENTER, "%s", id(text_request).state.c_str());
+          it.printf(160, 70, id(font_timer), Color(0,255,180), TextAlign::CENTER, "LISTENING");
+          it.printf(160, 110, id(font_response), Color(0,180,140), TextAlign::CENTER, "V.I.K.I");
+          draw_arc(160,118,55,200,340,Color(0,255,180),4);
+          draw_arc(160,118,65,210,330,Color(0,200,140),3);
+          draw_arc(160,118,75,220,320,Color(0,150,110),3);
+          it.printf(160, 185, id(font_response), Color(0,180,130), TextAlign::CENTER, "%s", id(text_request).state.c_str());
           id(draw_timer_timeline).execute();
 
       - id: thinking_page
         lambda: |-
+          auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick=3) {
+            int span = ea-sa; if(span<0)span+=360; if(span==0)span=360;
+            for(int i=0;i<=span;i++){float a=(sa+i)*M_PI/180.0f;for(int t=0;t<thick;t++)it.draw_pixel_at(cx+(int)(cosf(a)*(r-t)),cy+(int)(sinf(a)*(r-t)),col);}
+          };
           it.fill(Color::BLACK);
-          it.printf(160, 80, id(font_timer), Color(0,200,255), TextAlign::CENTER, "THINKING");
-          it.printf(160, 115, id(font_response), Color(0,160,200), TextAlign::CENTER, "V.I.K.I");
-          it.arc(160, 118, 60, 0, 180, Color(0,200,255));
-          it.arc(160, 118, 70, 45, 225, Color(0,160,220));
-          it.arc(160, 118, 80, 90, 270, Color(0,120,180));
-          it.printf(160, 190, id(font_response), Color(0,160,200), TextAlign::CENTER, "%s", id(text_request).state.c_str());
+          it.printf(160, 70, id(font_timer), Color(0,200,255), TextAlign::CENTER, "THINKING");
+          it.printf(160, 110, id(font_response), Color(0,160,200), TextAlign::CENTER, "V.I.K.I");
+          draw_arc(160,118,55,0,180,Color(0,200,255),4);
+          draw_arc(160,118,65,45,225,Color(0,160,220),3);
+          draw_arc(160,118,75,90,270,Color(0,120,180),3);
+          it.printf(160, 185, id(font_response), Color(0,160,200), TextAlign::CENTER, "%s", id(text_request).state.c_str());
           id(draw_timer_timeline).execute();
 
       - id: replying_page
         lambda: |-
+          auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick=3) {
+            int span = ea-sa; if(span<0)span+=360; if(span==0)span=360;
+            for(int i=0;i<=span;i++){float a=(sa+i)*M_PI/180.0f;for(int t=0;t<thick;t++)it.draw_pixel_at(cx+(int)(cosf(a)*(r-t)),cy+(int)(sinf(a)*(r-t)),col);}
+          };
           it.fill(Color::BLACK);
-          it.printf(160, 60, id(font_timer), Color(0,220,255), TextAlign::CENTER, "REPLYING");
-          it.printf(160, 95, id(font_response), Color(0,180,220), TextAlign::CENTER, "V.I.K.I");
-          it.arc(160, 118, 55, 270, 269, Color(0,220,255));
-          it.arc(160, 118, 65, 270, 269, Color(0,180,220));
-          it.arc(160, 118, 75, 270, 269, Color(0,140,180));
-          it.filled_rectangle(20, 155, 280, 1, Color(0,80,120));
-          it.printf(160, 170, id(font_response), Color(0,200,255), TextAlign::CENTER, "%s", id(text_request).state.c_str());
-          it.printf(160, 190, id(font_response), Color(0,255,180), TextAlign::CENTER, "%s", id(text_response).state.c_str());
+          it.printf(160, 55, id(font_timer), Color(0,220,255), TextAlign::CENTER, "REPLYING");
+          it.printf(160, 88, id(font_response), Color(0,180,220), TextAlign::CENTER, "V.I.K.I");
+          draw_arc(160,118,50,0,359,Color(0,220,255),4);
+          draw_arc(160,118,60,0,359,Color(0,180,220),3);
+          draw_arc(160,118,70,0,359,Color(0,140,180),2);
+          it.line(20,152,300,152,Color(0,60,100));
+          it.printf(160, 165, id(font_response), Color(0,200,255), TextAlign::CENTER, "%s", id(text_request).state.c_str());
+          it.printf(160, 185, id(font_response), Color(0,255,180), TextAlign::CENTER, "%s", id(text_response).state.c_str());
           id(draw_timer_timeline).execute();
 
       - id: timer_finished_page
         lambda: |-
+          auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick=3) {
+            int span = ea-sa; if(span<0)span+=360; if(span==0)span=360;
+            for(int i=0;i<=span;i++){float a=(sa+i)*M_PI/180.0f;for(int t=0;t<thick;t++)it.draw_pixel_at(cx+(int)(cosf(a)*(r-t)),cy+(int)(sinf(a)*(r-t)),col);}
+          };
           it.fill(Color::BLACK);
-          it.printf(160, 100, id(font_timer), Color(255,200,0), TextAlign::CENTER, "TIMER");
+          draw_arc(160,118,75,0,359,Color(255,200,0),4);
+          draw_arc(160,118,85,0,359,Color(180,140,0),3);
+          it.printf(160, 105, id(font_timer), Color(255,200,0), TextAlign::CENTER, "TIMER");
           it.printf(160, 140, id(font_timer), Color(255,200,0), TextAlign::CENTER, "DONE");
-          it.arc(160, 118, 80, 0, 359, Color(255,200,0));
-          it.arc(160, 118, 90, 0, 359, Color(200,150,0));
 
       - id: error_page
         lambda: |-
+          auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick=3) {
+            int span = ea-sa; if(span<0)span+=360; if(span==0)span=360;
+            for(int i=0;i<=span;i++){float a=(sa+i)*M_PI/180.0f;for(int t=0;t<thick;t++)it.draw_pixel_at(cx+(int)(cosf(a)*(r-t)),cy+(int)(sinf(a)*(r-t)),col);}
+          };
           it.fill(Color::BLACK);
-          it.printf(160, 90, id(font_timer), Color(255,60,0), TextAlign::CENTER, "ERROR");
-          it.printf(160, 130, id(font_response), Color(255,100,0), TextAlign::CENTER, "CHECK SYSTEM");
-          it.arc(160, 118, 80, 0, 359, Color(255,60,0));
-          it.arc(160, 118, 90, 0, 359, Color(180,30,0));
+          draw_arc(160,118,75,0,359,Color(255,60,0),4);
+          draw_arc(160,118,85,0,359,Color(180,30,0),3);
+          it.printf(160, 105, id(font_timer), Color(255,60,0), TextAlign::CENTER, "ERROR");
+          it.printf(160, 140, id(font_response), Color(200,80,0), TextAlign::CENTER, "CHECK SYSTEM");
 
       - id: no_ha_page
         lambda: |-
+          auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick=3) {
+            int span = ea-sa; if(span<0)span+=360; if(span==0)span=360;
+            for(int i=0;i<=span;i++){float a=(sa+i)*M_PI/180.0f;for(int t=0;t<thick;t++)it.draw_pixel_at(cx+(int)(cosf(a)*(r-t)),cy+(int)(sinf(a)*(r-t)),col);}
+          };
           it.fill(Color::BLACK);
-          it.printf(160, 90, id(font_timer), Color(255,140,0), TextAlign::CENTER, "NO HA");
-          it.printf(160, 130, id(font_response), Color(200,100,0), TextAlign::CENTER, "CONNECTING...");
-          it.arc(160, 118, 80, 0, 359, Color(255,140,0));
+          draw_arc(160,118,75,0,359,Color(255,140,0),4);
+          it.printf(160, 100, id(font_timer), Color(255,140,0), TextAlign::CENTER, "NO HA");
+          it.printf(160, 140, id(font_response), Color(200,100,0), TextAlign::CENTER, "CONNECTING...");
 
       - id: no_wifi_page
         lambda: |-
+          auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick=3) {
+            int span = ea-sa; if(span<0)span+=360; if(span==0)span=360;
+            for(int i=0;i<=span;i++){float a=(sa+i)*M_PI/180.0f;for(int t=0;t<thick;t++)it.draw_pixel_at(cx+(int)(cosf(a)*(r-t)),cy+(int)(sinf(a)*(r-t)),col);}
+          };
           it.fill(Color::BLACK);
-          it.printf(160, 90, id(font_timer), Color(255,60,60), TextAlign::CENTER, "NO WIFI");
-          it.printf(160, 130, id(font_response), Color(200,40,40), TextAlign::CENTER, "CHECK NETWORK");
-          it.arc(160, 118, 80, 0, 359, Color(255,60,60));
+          draw_arc(160,118,75,0,359,Color(255,60,60),4);
+          it.printf(160, 100, id(font_timer), Color(255,60,60), TextAlign::CENTER, "NO WIFI");
+          it.printf(160, 140, id(font_response), Color(200,40,40), TextAlign::CENTER, "CHECK NETWORK");
 
       - id: initializing_page
         lambda: |-
+          auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick=3) {
+            int span = ea-sa; if(span<0)span+=360; if(span==0)span=360;
+            for(int i=0;i<=span;i++){float a=(sa+i)*M_PI/180.0f;for(int t=0;t<thick;t++)it.draw_pixel_at(cx+(int)(cosf(a)*(r-t)),cy+(int)(sinf(a)*(r-t)),col);}
+          };
           it.fill(Color::BLACK);
-          it.printf(160, 80, id(font_timer), Color(0,180,255), TextAlign::CENTER, "V.I.K.I");
-          it.printf(160, 120, id(font_response), Color(0,140,200), TextAlign::CENTER, "INITIALIZING");
-          it.printf(160, 140, id(font_response), Color(0,100,160), TextAlign::CENTER, "PLEASE WAIT...");
-          it.arc(160, 118, 80, 0, 359, Color(0,160,255));
-          it.arc(160, 118, 90, 0, 359, Color(0,100,180));
+          draw_arc(160,118,75,0,359,Color(0,160,255),4);
+          draw_arc(160,118,85,0,359,Color(0,100,180),3);
+          it.printf(160, 88, id(font_timer), Color(0,180,255), TextAlign::CENTER, "V.I.K.I");
+          it.printf(160, 128, id(font_response), Color(0,140,200), TextAlign::CENTER, "INITIALIZING");
+          it.printf(160, 148, id(font_response), Color(0,100,160), TextAlign::CENTER, "PLEASE WAIT...");
 
       - id: muted_page
         lambda: |-
+          auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick=3) {
+            int span = ea-sa; if(span<0)span+=360; if(span==0)span=360;
+            for(int i=0;i<=span;i++){float a=(sa+i)*M_PI/180.0f;for(int t=0;t<thick;t++)it.draw_pixel_at(cx+(int)(cosf(a)*(r-t)),cy+(int)(sinf(a)*(r-t)),col);}
+          };
           it.fill(Color::BLACK);
-          it.printf(160, 100, id(font_timer), Color(80,80,80), TextAlign::CENTER, "MUTED");
+          draw_arc(160,118,75,0,359,Color(60,60,60),3);
+          it.printf(160, 105, id(font_timer), Color(80,80,80), TextAlign::CENTER, "MUTED");
           it.printf(160, 140, id(font_response), Color(60,60,60), TextAlign::CENTER, "V.I.K.I");
-          it.arc(160, 118, 80, 0, 359, Color(60,60,60));
           id(draw_timer_timeline).execute();
           id(draw_active_timer_widget).execute();
