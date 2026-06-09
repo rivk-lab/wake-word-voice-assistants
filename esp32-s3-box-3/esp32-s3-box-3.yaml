@@ -240,7 +240,7 @@ voice_assistant:
   micro_wake_word: mww
   noise_suppression_level: 2
   auto_gain: 31dBFS
-  volume_multiplier: 4.0
+  volume_multiplier: 2.0
   on_listening:
     - lambda: id(voice_assistant_phase) = ${voice_assist_listening_phase_id};
     - text_sensor.template.publish:
@@ -805,23 +805,26 @@ display:
 
           int W = 320, H = 240;
 
-          it.filled_rectangle(0, 0, W, 24, Color(0, 15, 28));
-          it.line(0, 24, W, 24, Color(0, 34, 51));
-          it.printf(8, 16, id(font_response), Color(0,200,255), "V.I.K.I");
-          it.printf(160, 16, id(font_response), Color(0,136,170), TextAlign::CENTER, "SOLAR MONITOR");
+          // TOP BAR
+          it.filled_rectangle(0, 0, W, 22, Color(0,15,28));
+          it.line(0, 22, W, 22, Color(0,34,51));
+          it.printf(8, 15, id(font_response), Color(0,200,255), "V.I.K.I");
+          it.printf(160, 15, id(font_response), Color(0,136,170), TextAlign::CENTER, "SOLAR MONITOR");
 
+          // CLOCK
           auto now = id(homeassistant_time).now();
           if (now.is_valid()) {
             int h = now.hour % 12;
             if (h == 0) h = 12;
             const char* ampm = now.hour < 12 ? "AM" : "PM";
-            it.printf(160, 60, id(font_timer), Color(0,200,255), TextAlign::CENTER, "%02d:%02d", h, now.minute);
-            it.printf(206, 48, id(font_response), Color(0,136,170), "%s", ampm);
-            it.printf(160, 72, id(font_response), Color(0,136,170), TextAlign::CENTER,
+            it.printf(150, 52, id(font_timer), Color(0,200,255), TextAlign::CENTER, "%02d:%02d", h, now.minute);
+            it.printf(196, 40, id(font_response), Color(0,136,170), "%s", ampm);
+            it.printf(160, 64, id(font_response), Color(0,136,170), TextAlign::CENTER,
               "%s %02d", now.strftime("%a %b").c_str(), now.day_of_month);
           }
-          it.line(0, 80, W, 80, Color(0, 34, 51));
+          it.line(0, 72, W, 72, Color(0,34,51));
 
+          // BMS VALUES
           float soc       = id(bms_soc).has_state()       ? id(bms_soc).state       : 0;
           float voltage   = id(bms_voltage).has_state()   ? id(bms_voltage).state   : 0;
           float temp      = id(bms_temp).has_state()      ? id(bms_temp).state      : 0;
@@ -837,67 +840,66 @@ display:
           Color hiCol  = cell_high > 3.55 ? Color(255,68,34) : cell_high > 3.45 ? Color(255,204,0) : Color(0,255,136);
           Color loCol  = cell_low < 3.0 ? Color(255,68,34) : cell_low < 3.1 ? Color(255,204,0) : Color(0,255,136);
           Color dCol   = delta < 0.010 ? Color(0,255,136) : delta < 0.030 ? Color(0,200,255) : delta < 0.060 ? Color(255,204,0) : Color(255,68,34);
-          Color dimCol = Color(0, 34, 51);
-          Color midCol = Color(0, 136, 170);
+          Color dimCol = Color(0,34,51);
+          Color midCol = Color(0,136,170);
 
-          int r = 26, thick = 4;
+          int r = 22, thick = 3;
 
-          draw_arc_bg(40, 112, r, dimCol, thick);
-          draw_arc(40, 112, r, 270, (270+(int)(soc/100.0f*360))%360, socCol, thick);
-          it.printf(40, 116, id(font_response), socCol, TextAlign::CENTER, "%.0f%%", soc);
-          it.printf(40, 127, id(font_response), midCol, TextAlign::CENTER, "%.1fV", voltage);
-          it.printf(40, 150, id(font_response), midCol, TextAlign::CENTER, "Percentage");
+          // ROW 1 — y=104
+          draw_arc_bg(40,  104, r, dimCol, thick);
+          draw_arc(40,  104, r, 270, (270+(int)(soc/100.0f*360))%360, socCol, thick);
+          it.printf(40,  108, id(font_response), socCol, TextAlign::CENTER, "%.0f%%", soc);
+          it.printf(40,  120, id(font_response), midCol, TextAlign::CENTER, "%.1fV", voltage);
+          it.printf(40,  134, id(font_response), midCol, TextAlign::CENTER, "Percentage");
 
-          float tpct = (temp - 15.0f) / 45.0f;
-          tpct = tpct < 0 ? 0 : tpct > 1 ? 1 : tpct;
-          draw_arc_bg(160, 112, r, dimCol, thick);
-          draw_arc(160, 112, r, 270, (270+(int)(tpct*360))%360, tCol, thick);
-          it.printf(160, 116, id(font_response), tCol, TextAlign::CENTER, "%.1f°", temp);
-          it.printf(160, 150, id(font_response), midCol, TextAlign::CENTER, "Temperature");
+          float tpct = (temp-15.0f)/45.0f;
+          tpct = tpct<0?0:tpct>1?1:tpct;
+          draw_arc_bg(160, 104, r, dimCol, thick);
+          draw_arc(160, 104, r, 270, (270+(int)(tpct*360))%360, tCol, thick);
+          it.printf(160, 108, id(font_response), tCol,   TextAlign::CENTER, "%.1f°", temp);
+          it.printf(160, 134, id(font_response), midCol, TextAlign::CENTER, "Temperature");
 
-          float ppct = fabsf(power) / 500.0f;
-          ppct = ppct > 1 ? 1 : ppct;
-          draw_arc_bg(280, 112, r, dimCol, thick);
-          draw_arc(280, 112, r, 270, (270+(int)(ppct*360))%360, pCol, thick);
-          it.printf(280, 116, id(font_response), pCol, TextAlign::CENTER, "%.0fW", fabsf(power));
-          it.printf(280, 127, id(font_response), pCol, TextAlign::CENTER, "%s", charging ? "CHG" : "DCH");
-          it.printf(280, 150, id(font_response), midCol, TextAlign::CENTER, "Power");
+          float ppct = fabsf(power)/500.0f;
+          ppct = ppct>1?1:ppct;
+          draw_arc_bg(280, 104, r, dimCol, thick);
+          draw_arc(280, 104, r, 270, (270+(int)(ppct*360))%360, pCol, thick);
+          it.printf(280, 108, id(font_response), pCol,   TextAlign::CENTER, "%.0fW", fabsf(power));
+          it.printf(280, 120, id(font_response), pCol,   TextAlign::CENTER, "%s", charging?"CHG":"DCH");
+          it.printf(280, 134, id(font_response), midCol, TextAlign::CENTER, "Power");
 
-          it.line(0, 154, W, 154, Color(0, 34, 51));
+          it.line(0, 141, W, 141, Color(0,34,51));
 
-          float hipct = (cell_high - 3.0f) / 0.65f;
-          hipct = hipct < 0 ? 0 : hipct > 1 ? 1 : hipct;
-          draw_arc_bg(40, 185, r, dimCol, thick);
-          draw_arc(40, 185, r, 270, (270+(int)(hipct*360))%360, hiCol, thick);
-          it.printf(40, 189, id(font_response), hiCol, TextAlign::CENTER, "%.3f", cell_high);
-          it.printf(40, 224, id(font_response), midCol, TextAlign::CENTER, "High Cell");
-          it.printf(40, 232, id(font_response), midCol, TextAlign::CENTER, "Voltage");
+          // ROW 2 — y=170
+          float hipct = (cell_high-3.0f)/0.65f;
+          hipct = hipct<0?0:hipct>1?1:hipct;
+          draw_arc_bg(40,  170, r, dimCol, thick);
+          draw_arc(40,  170, r, 270, (270+(int)(hipct*360))%360, hiCol, thick);
+          it.printf(40,  174, id(font_response), hiCol,  TextAlign::CENTER, "%.3f", cell_high);
+          it.printf(40,  206, id(font_response), midCol, TextAlign::CENTER, "Hi Cell V");
 
-          float lopct = (cell_low - 2.8f) / 0.65f;
-          lopct = lopct < 0 ? 0 : lopct > 1 ? 1 : lopct;
-          draw_arc_bg(160, 185, r, dimCol, thick);
-          draw_arc(160, 185, r, 270, (270+(int)(lopct*360))%360, loCol, thick);
-          it.printf(160, 189, id(font_response), loCol, TextAlign::CENTER, "%.3f", cell_low);
-          it.printf(160, 224, id(font_response), midCol, TextAlign::CENTER, "Low Cell");
-          it.printf(160, 232, id(font_response), midCol, TextAlign::CENTER, "Voltage");
+          float lopct = (cell_low-2.8f)/0.65f;
+          lopct = lopct<0?0:lopct>1?1:lopct;
+          draw_arc_bg(160, 170, r, dimCol, thick);
+          draw_arc(160, 170, r, 270, (270+(int)(lopct*360))%360, loCol, thick);
+          it.printf(160, 174, id(font_response), loCol,  TextAlign::CENTER, "%.3f", cell_low);
+          it.printf(160, 206, id(font_response), midCol, TextAlign::CENTER, "Lo Cell V");
 
-          float dpct = delta / 0.1f;
-          dpct = dpct > 1 ? 1 : dpct;
-          draw_arc_bg(280, 185, r, dimCol, thick);
-          draw_arc(280, 185, r, 270, (270+(int)(dpct*360))%360, dCol, thick);
-          it.printf(280, 189, id(font_response), dCol, TextAlign::CENTER, "%.3f", delta);
-          it.printf(280, 224, id(font_response), midCol, TextAlign::CENTER, "Delta");
-          it.printf(280, 232, id(font_response), midCol, TextAlign::CENTER, "Voltage");
+          float dpct = delta/0.1f;
+          dpct = dpct>1?1:dpct;
+          draw_arc_bg(280, 170, r, dimCol, thick);
+          draw_arc(280, 170, r, 270, (270+(int)(dpct*360))%360, dCol, thick);
+          it.printf(280, 174, id(font_response), dCol,   TextAlign::CENTER, "%.3f", delta);
+          it.printf(280, 206, id(font_response), midCol, TextAlign::CENTER, "Delta V");
 
+          // CORNER BRACKETS
           int b = 10;
-          it.line(2, 2+b, 2, 2, Color(0,180,255)); it.line(2, 2, 2+b, 2, Color(0,180,255));
-          it.line(W-2, 2+b, W-2, 2, Color(0,180,255)); it.line(W-2, 2, W-2-b, 2, Color(0,180,255));
-          it.line(2, H-2-b, 2, H-2, Color(0,180,255)); it.line(2, H-2, 2+b, H-2, Color(0,180,255));
-          it.line(W-2, H-2-b, W-2, H-2, Color(0,180,255)); it.line(W-2, H-2, W-2-b, H-2, Color(0,180,255));
+          it.line(2,2+b,2,2,Color(0,180,255)); it.line(2,2,2+b,2,Color(0,180,255));
+          it.line(W-2,2+b,W-2,2,Color(0,180,255)); it.line(W-2,2,W-2-b,2,Color(0,180,255));
+          it.line(2,H-2-b,2,H-2,Color(0,180,255)); it.line(2,H-2,2+b,H-2,Color(0,180,255));
+          it.line(W-2,H-2-b,W-2,H-2,Color(0,180,255)); it.line(W-2,H-2,W-2-b,H-2,Color(0,180,255));
 
           id(draw_timer_timeline).execute();
           id(draw_active_timer_widget).execute();
-
       - id: listening_page
         lambda: |-
           auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick) {
