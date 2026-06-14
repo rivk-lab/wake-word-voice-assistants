@@ -752,9 +752,9 @@ display:
             int h = now.hour % 12;
             if (h == 0) h = 12;
             const char* ampm = now.hour < 12 ? "AM" : "PM";
-            it.printf(W/2, 50, id(font_timer), Color(0,200,255), TextAlign::CENTER, "%02d:%02d", h, now.minute);
-            it.printf(W/2+50, 38, id(font_response), Color(0,136,170), "%s", ampm);
-            it.printf(W/2, 63, id(font_response), Color(0,136,170), TextAlign::CENTER, "%s %02d", now.strftime("%a %b").c_str(), now.day_of_month);
+            it.printf(W/2, 46, id(font_timer), Color(0,200,255), TextAlign::CENTER, "%02d:%02d", h, now.minute);
+            it.printf(W/2+50, 34, id(font_response), Color(0,136,170), "%s", ampm);
+            it.printf(W/2, 61, id(font_response), Color(0,136,170), TextAlign::CENTER, "%s %02d", now.strftime("%a %b").c_str(), now.day_of_month);
           }
           float soc       = id(bms_soc).has_state()       ? id(bms_soc).state       : 0;
           float voltage   = id(bms_voltage).has_state()   ? id(bms_voltage).state   : 0;
@@ -782,7 +782,7 @@ display:
           tpct = tpct<0?0:tpct>1?1:tpct;
           draw_arc_bg(160, 102, r, dimCol, thick);
           draw_arc(160, 102, r, 270, (270+(int)(tpct*360))%360, tCol, thick);
-          it.printf(160, 106, id(font_response), tCol,   TextAlign::CENTER, "%.1fÂ°", temp);
+          it.printf(160, 106, id(font_response), tCol,   TextAlign::CENTER, "%.1fC", temp);
           it.printf(160, 136, id(font_response), midCol, TextAlign::CENTER, "Temperature");
           float ppct = fabsf(power)/500.0f;
           ppct = ppct>1?1:ppct;
@@ -958,4 +958,5 @@ display:
           it.printf(160, 158, id(font_response), Color(60,60,60), TextAlign::CENTER, "MICROPHONE OFF");
           id(draw_timer_timeline).execute();
           id(draw_active_timer_widget).execute();
+
 
