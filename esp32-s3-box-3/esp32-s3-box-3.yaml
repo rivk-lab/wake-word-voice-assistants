@@ -649,6 +649,64 @@ globals:
     type: bool
     restore_value: false
 
+font:
+  - file:
+      type: gfonts
+      family: Figtree
+      weight: 300
+      italic: true
+    id: font_request
+    size: 15
+    glyphsets:
+      - GF_Latin_Core
+  - file:
+      type: gfonts
+      family: Figtree
+      weight: 300
+    id: font_response
+    size: 15
+    glyphsets:
+      - GF_Latin_Core
+  - file:
+      type: gfonts
+      family: Figtree
+      weight: 300
+    id: font_timer
+    size: 30
+    glyphsets:
+      - GF_Latin_Core
+
+text_sensor:
+  - id: text_request
+    platform: template
+    on_value:
+      lambda: |-
+        if(id(text_request).state.length()>32) {
+          std::string name = id(text_request).state.c_str();
+          std::string truncated = esphome::str_truncate(name.c_str(),31);
+          id(text_request).state = (truncated+"...").c_str();
+        }
+
+  - id: text_response
+    platform: template
+    on_value:
+      lambda: |-
+        if(id(text_response).state.length()>32) {
+          std::string name = id(text_response).state.c_str();
+          std::string truncated = esphome::str_truncate(name.c_str(),31);
+          id(text_response).state = (truncated+"...").c_str();
+        }
+
+color:
+  - id: active_timer_color
+    hex: "26ed3a"
+  - id: paused_timer_color
+    hex: "3b89e3"
+
+spi:
+  - id: spi_bus
+    clk_pin: 7
+    mosi_pin: 6
 
 display:
   - platform: mipi_spi
@@ -899,3 +957,4 @@ display:
           it.printf(160, 158, id(font_response), Color(60,60,60), TextAlign::CENTER, "MICROPHONE OFF");
           id(draw_timer_timeline).execute();
           id(draw_active_timer_widget).execute();
+
