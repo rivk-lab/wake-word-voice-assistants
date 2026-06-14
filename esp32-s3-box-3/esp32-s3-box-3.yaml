@@ -780,8 +780,9 @@ display:
       inverted: true
     update_interval: never
     pages:
-- id: idle_page
-        lambda: |-
+    
+    - id: idle_page
+    lambda: |-
           it.fill(Color::BLACK);
 
           auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick) {
