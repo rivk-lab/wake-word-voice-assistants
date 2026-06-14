@@ -898,8 +898,8 @@ display:
           id(draw_timer_timeline).execute();
           id(draw_active_timer_widget).execute();
 
-      - id: listening_page
-        lambda: |-
+- id: listening_page
+lambda: |-
           auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick) {
             int span=ea-sa; if(span<0)span+=360; if(span==0)span=360;
             for(int i=0;i<=span;i++){float a=(sa+i)*M_PI/180.0f;for(int t=0;t<thick;t++)it.draw_pixel_at(cx+(int)(cosf(a)*(r-t)),cy+(int)(sinf(a)*(r-t)),col);}
@@ -915,8 +915,8 @@ display:
           it.printf(160, 180, id(font_response), Color(0,136,170), TextAlign::CENTER, "%s", id(text_request).state.c_str());
           id(draw_timer_timeline).execute();
 
-      - id: thinking_page
-        lambda: |-
+- id: thinking_page
+lambda: |-
           auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick) {
             int span=ea-sa; if(span<0)span+=360; if(span==0)span=360;
             for(int i=0;i<=span;i++){float a=(sa+i)*M_PI/180.0f;for(int t=0;t<thick;t++)it.draw_pixel_at(cx+(int)(cosf(a)*(r-t)),cy+(int)(sinf(a)*(r-t)),col);}
@@ -935,8 +935,8 @@ display:
           it.printf(160, 182, id(font_response), Color(0,136,170), TextAlign::CENTER, "%s", id(text_request).state.c_str());
           id(draw_timer_timeline).execute();
 
-      - id: replying_page
-        lambda: |-
+- id: replying_page
+lambda: |-
           auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick) {
             int span=ea-sa; if(span<0)span+=360; if(span==0)span=360;
             for(int i=0;i<=span;i++){float a=(sa+i)*M_PI/180.0f;for(int t=0;t<thick;t++)it.draw_pixel_at(cx+(int)(cosf(a)*(r-t)),cy+(int)(sinf(a)*(r-t)),col);}
@@ -954,8 +954,8 @@ display:
           it.printf(160, 178, id(font_response), Color(0,255,136), TextAlign::CENTER, "%s", id(text_response).state.c_str());
           id(draw_timer_timeline).execute();
 
-      - id: timer_finished_page
-        lambda: |-
+- id: timer_finished_page
+lambda: |-
           auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick) {
             int span=ea-sa; if(span<0)span+=360; if(span==0)span=360;
             for(int i=0;i<=span;i++){float a=(sa+i)*M_PI/180.0f;for(int t=0;t<thick;t++)it.draw_pixel_at(cx+(int)(cosf(a)*(r-t)),cy+(int)(sinf(a)*(r-t)),col);}
@@ -970,8 +970,8 @@ display:
           it.printf(160, 120, id(font_timer), Color(255,200,0), TextAlign::CENTER, "TIMER");
           it.printf(160, 155, id(font_timer), Color(255,200,0), TextAlign::CENTER, "DONE");
 
-      - id: error_page
-        lambda: |-
+- id: error_page
+lambda: |-
           auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick) {
             int span=ea-sa; if(span<0)span+=360; if(span==0)span=360;
             for(int i=0;i<=span;i++){float a=(sa+i)*M_PI/180.0f;for(int t=0;t<thick;t++)it.draw_pixel_at(cx+(int)(cosf(a)*(r-t)),cy+(int)(sinf(a)*(r-t)),col);}
@@ -986,8 +986,8 @@ display:
           it.printf(160, 122, id(font_timer), Color(255,60,0), TextAlign::CENTER, "ERROR");
           it.printf(160, 158, id(font_response), Color(200,80,0), TextAlign::CENTER, "CHECK SYSTEM");
 
-      - id: no_ha_page
-        lambda: |-
+- id: no_ha_page
+lambda: |-
           auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick) {
             int span=ea-sa; if(span<0)span+=360; if(span==0)span=360;
             for(int i=0;i<=span;i++){float a=(sa+i)*M_PI/180.0f;for(int t=0;t<thick;t++)it.draw_pixel_at(cx+(int)(cosf(a)*(r-t)),cy+(int)(sinf(a)*(r-t)),col);}
@@ -1001,8 +1001,8 @@ display:
           it.printf(160, 122, id(font_timer), Color(255,140,0), TextAlign::CENTER, "NO HA");
           it.printf(160, 158, id(font_response), Color(200,100,0), TextAlign::CENTER, "CONNECTING...");
 
-      - id: no_wifi_page
-        lambda: |-
+- id: no_wifi_page
+lambda: |-
           auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick) {
             int span=ea-sa; if(span<0)span+=360; if(span==0)span=360;
             for(int i=0;i<=span;i++){float a=(sa+i)*M_PI/180.0f;for(int t=0;t<thick;t++)it.draw_pixel_at(cx+(int)(cosf(a)*(r-t)),cy+(int)(sinf(a)*(r-t)),col);}
@@ -1016,8 +1016,8 @@ display:
           it.printf(160, 122, id(font_timer), Color(255,60,60), TextAlign::CENTER, "NO WIFI");
           it.printf(160, 158, id(font_response), Color(200,40,40), TextAlign::CENTER, "CHECK NETWORK");
 
-      - id: initializing_page
-        lambda: |-
+- id: initializing_page
+lambda: |-
           auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick) {
             int span=ea-sa; if(span<0)span+=360; if(span==0)span=360;
             for(int i=0;i<=span;i++){float a=(sa+i)*M_PI/180.0f;for(int t=0;t<thick;t++)it.draw_pixel_at(cx+(int)(cosf(a)*(r-t)),cy+(int)(sinf(a)*(r-t)),col);}
@@ -1032,8 +1032,8 @@ display:
           it.printf(160, 118, id(font_timer), Color(0,180,255), TextAlign::CENTER, "V.I.K.I");
           it.printf(160, 158, id(font_response), Color(0,140,200), TextAlign::CENTER, "INITIALIZING...");
 
-      - id: muted_page
-        lambda: |-
+- id: muted_page
+lambda: |-
           auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick) {
             int span=ea-sa; if(span<0)span+=360; if(span==0)span=360;
             for(int i=0;i<=span;i++){float a=(sa+i)*M_PI/180.0f;for(int t=0;t<thick;t++)it.draw_pixel_at(cx+(int)(cosf(a)*(r-t)),cy+(int)(sinf(a)*(r-t)),col);}
