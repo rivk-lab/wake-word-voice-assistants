@@ -745,8 +745,8 @@ display:
           int W = 320, H = 240;
           it.filled_rectangle(0, 0, W, 24, Color(0,15,28));
           it.line(0, 24, W, 24, Color(0,34,51));
-          it.printf(6, 17, id(font_response), Color(0,200,255), "V.I.K.I");
-          it.printf(W/2, 17, id(font_response), Color(0,136,170), TextAlign::CENTER, "SOLAR MONITOR");
+          it.printf(6, 16, id(font_response), Color(0,200,255), TextAlign::BASELINE_LEFT, "V.I.K.I");
+          it.printf(W/2, 16, id(font_response), Color(0,136,170), TextAlign::BASELINE_CENTER, "SOLAR MONITOR");
           auto now = id(homeassistant_time).now();
           if (now.is_valid()) {
             int h = now.hour % 12;
@@ -825,8 +825,8 @@ display:
           it.fill(Color::BLACK);
           it.filled_rectangle(0, 0, 320, 24, Color(0,15,28));
           it.line(0, 24, 320, 24, Color(0,34,51));
-          it.printf(6, 17, id(font_response), Color(0,200,255), "V.I.K.I");
-          it.printf(160, 17, id(font_response), Color(0,255,136), TextAlign::CENTER, "LISTENING");
+          it.printf(6, 16, id(font_response), Color(0,200,255), TextAlign::BASELINE_LEFT, "V.I.K.I");
+          it.printf(160, 16, id(font_response), Color(0,255,136), TextAlign::BASELINE_CENTER, "LISTENING");
           draw_arc(160, 118, 40, 0, 359, Color(0,34,51), 2);
           it.filled_circle(160, 118, 6, Color(0,255,136));
           it.printf(160, 165, id(font_response), Color(0,255,136), TextAlign::CENTER, "Say something...");
@@ -841,8 +841,8 @@ display:
           it.fill(Color::BLACK);
           it.filled_rectangle(0, 0, 320, 24, Color(0,15,28));
           it.line(0, 24, 320, 24, Color(0,34,51));
-          it.printf(6, 17, id(font_response), Color(0,200,255), "V.I.K.I");
-          it.printf(160, 17, id(font_response), Color(0,170,255), TextAlign::CENTER, "THINKING");
+          it.printf(6, 16, id(font_response), Color(0,200,255), TextAlign::BASELINE_LEFT, "V.I.K.I");
+          it.printf(160, 16, id(font_response), Color(0,170,255), TextAlign::BASELINE_CENTER, "THINKING");
           draw_arc(160, 118, 50, 0, 359, Color(0,34,51), 2);
           draw_arc(160, 118, 50, 270, 90, Color(0,170,255), 3);
           draw_arc(160, 118, 36, 0, 359, Color(0,34,51), 2);
@@ -860,8 +860,8 @@ display:
           it.fill(Color::BLACK);
           it.filled_rectangle(0, 0, 320, 24, Color(0,15,28));
           it.line(0, 24, 320, 24, Color(0,34,51));
-          it.printf(6, 17, id(font_response), Color(0,200,255), "V.I.K.I");
-          it.printf(160, 17, id(font_response), Color(0,200,255), TextAlign::CENTER, "REPLYING");
+          it.printf(6, 16, id(font_response), Color(0,200,255), TextAlign::BASELINE_LEFT, "V.I.K.I");
+          it.printf(160, 16, id(font_response), Color(0,200,255), TextAlign::BASELINE_CENTER, "REPLYING");
           draw_arc(160, 110, 50, 0, 359, Color(0,34,51), 2);
           draw_arc(160, 110, 50, 270, 269, Color(0,200,255), 3);
           it.filled_circle(160, 110, 5, Color(0,200,255));
@@ -878,8 +878,8 @@ display:
           it.fill(Color::BLACK);
           it.filled_rectangle(0, 0, 320, 24, Color(0,15,28));
           it.line(0, 24, 320, 24, Color(0,34,51));
-          it.printf(6, 17, id(font_response), Color(0,200,255), "V.I.K.I");
-          it.printf(160, 17, id(font_response), Color(255,200,0), TextAlign::CENTER, "TIMER DONE");
+          it.printf(6, 16, id(font_response), Color(0,200,255), TextAlign::BASELINE_LEFT, "V.I.K.I");
+          it.printf(160, 16, id(font_response), Color(255,200,0), TextAlign::BASELINE_CENTER, "TIMER DONE");
           draw_arc(160, 130, 50, 0, 359, Color(255,200,0), 4);
           draw_arc(160, 130, 62, 0, 359, Color(180,140,0), 3);
           it.printf(160, 120, id(font_timer), Color(255,200,0), TextAlign::CENTER, "TIMER");
@@ -893,8 +893,8 @@ display:
           it.fill(Color::BLACK);
           it.filled_rectangle(0, 0, 320, 24, Color(0,15,28));
           it.line(0, 24, 320, 24, Color(0,34,51));
-          it.printf(6, 17, id(font_response), Color(0,200,255), "V.I.K.I");
-          it.printf(160, 17, id(font_response), Color(255,60,0), TextAlign::CENTER, "ERROR");
+          it.printf(6, 16, id(font_response), Color(0,200,255), TextAlign::BASELINE_LEFT, "V.I.K.I");
+          it.printf(160, 16, id(font_response), Color(255,60,0), TextAlign::BASELINE_CENTER, "ERROR");
           draw_arc(160, 130, 50, 0, 359, Color(255,60,0), 4);
           draw_arc(160, 130, 62, 0, 359, Color(180,30,0), 3);
           it.printf(160, 122, id(font_timer), Color(255,60,0), TextAlign::CENTER, "ERROR");
@@ -908,8 +908,8 @@ display:
           it.fill(Color::BLACK);
           it.filled_rectangle(0, 0, 320, 24, Color(0,15,28));
           it.line(0, 24, 320, 24, Color(0,34,51));
-          it.printf(6, 17, id(font_response), Color(0,200,255), "V.I.K.I");
-          it.printf(160, 17, id(font_response), Color(255,140,0), TextAlign::CENTER, "NO HA");
+          it.printf(6, 16, id(font_response), Color(0,200,255), TextAlign::BASELINE_LEFT, "V.I.K.I");
+          it.printf(160, 16, id(font_response), Color(255,140,0), TextAlign::BASELINE_CENTER, "NO HA");
           draw_arc(160, 130, 50, 0, 359, Color(255,140,0), 4);
           it.printf(160, 122, id(font_timer), Color(255,140,0), TextAlign::CENTER, "NO HA");
           it.printf(160, 158, id(font_response), Color(200,100,0), TextAlign::CENTER, "CONNECTING...");
@@ -922,8 +922,8 @@ display:
           it.fill(Color::BLACK);
           it.filled_rectangle(0, 0, 320, 24, Color(0,15,28));
           it.line(0, 24, 320, 24, Color(0,34,51));
-          it.printf(6, 17, id(font_response), Color(0,200,255), "V.I.K.I");
-          it.printf(160, 17, id(font_response), Color(255,60,60), TextAlign::CENTER, "NO WIFI");
+          it.printf(6, 16, id(font_response), Color(0,200,255), TextAlign::BASELINE_LEFT, "V.I.K.I");
+          it.printf(160, 16, id(font_response), Color(255,60,60), TextAlign::BASELINE_CENTER, "NO WIFI");
           draw_arc(160, 130, 50, 0, 359, Color(255,60,60), 4);
           it.printf(160, 122, id(font_timer), Color(255,60,60), TextAlign::CENTER, "NO WIFI");
           it.printf(160, 158, id(font_response), Color(200,40,40), TextAlign::CENTER, "CHECK NETWORK");
@@ -936,8 +936,8 @@ display:
           it.fill(Color::BLACK);
           it.filled_rectangle(0, 0, 320, 24, Color(0,15,28));
           it.line(0, 24, 320, 24, Color(0,34,51));
-          it.printf(6, 17, id(font_response), Color(0,200,255), "V.I.K.I");
-          it.printf(160, 17, id(font_response), Color(0,136,170), TextAlign::CENTER, "INITIALIZING");
+          it.printf(6, 16, id(font_response), Color(0,200,255), TextAlign::BASELINE_LEFT, "V.I.K.I");
+          it.printf(160, 16, id(font_response), Color(0,136,170), TextAlign::BASELINE_CENTER, "INITIALIZING");
           draw_arc(160, 130, 50, 0, 359, Color(0,160,255), 4);
           draw_arc(160, 130, 62, 0, 359, Color(0,100,180), 3);
           it.printf(160, 118, id(font_timer), Color(0,180,255), TextAlign::CENTER, "V.I.K.I");
@@ -951,13 +951,14 @@ display:
           it.fill(Color::BLACK);
           it.filled_rectangle(0, 0, 320, 24, Color(0,15,28));
           it.line(0, 24, 320, 24, Color(0,34,51));
-          it.printf(6, 17, id(font_response), Color(0,200,255), "V.I.K.I");
-          it.printf(160, 17, id(font_response), Color(80,80,80), TextAlign::CENTER, "MUTED");
+          it.printf(6, 16, id(font_response), Color(0,200,255), TextAlign::BASELINE_LEFT, "V.I.K.I");
+          it.printf(160, 16, id(font_response), Color(80,80,80), TextAlign::BASELINE_CENTER, "MUTED");
           draw_arc(160, 130, 50, 0, 359, Color(60,60,60), 3);
           it.printf(160, 122, id(font_timer), Color(80,80,80), TextAlign::CENTER, "MUTED");
           it.printf(160, 158, id(font_response), Color(60,60,60), TextAlign::CENTER, "MICROPHONE OFF");
           id(draw_timer_timeline).execute();
           id(draw_active_timer_widget).execute();
+
 
 
 
