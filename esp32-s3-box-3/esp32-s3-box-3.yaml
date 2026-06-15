@@ -880,10 +880,10 @@ display:
           it.line(0, 24, 320, 24, Color(0,34,51));
           it.printf(6, 16, id(font_response), Color(0,200,255), TextAlign::BASELINE_LEFT, "V.I.K.I");
           it.printf(160, 16, id(font_response), Color(255,200,0), TextAlign::BASELINE_CENTER, "TIMER DONE");
-          draw_arc(160, 130, 50, 0, 359, Color(255,200,0), 4);
-          draw_arc(160, 130, 62, 0, 359, Color(180,140,0), 3);
-          it.printf(160, 120, id(font_timer), Color(255,200,0), TextAlign::CENTER, "TIMER");
-          it.printf(160, 155, id(font_timer), Color(255,200,0), TextAlign::CENTER, "DONE");
+          draw_arc(160, 125, 42, 0, 359, Color(255,200,0), 4);
+          draw_arc(160, 125, 54, 0, 359, Color(180,140,0), 3);
+          it.printf(160, 125, id(font_response), Color(255,200,0), TextAlign::CENTER, "TIMER DONE");
+          it.printf(160, 195, id(font_response), Color(255,200,0), TextAlign::CENTER, "Tap to dismiss");
       - id: error_page
         lambda: |-
           auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick) {
@@ -895,10 +895,10 @@ display:
           it.line(0, 24, 320, 24, Color(0,34,51));
           it.printf(6, 16, id(font_response), Color(0,200,255), TextAlign::BASELINE_LEFT, "V.I.K.I");
           it.printf(160, 16, id(font_response), Color(255,60,0), TextAlign::BASELINE_CENTER, "ERROR");
-          draw_arc(160, 130, 50, 0, 359, Color(255,60,0), 4);
-          draw_arc(160, 130, 62, 0, 359, Color(180,30,0), 3);
-          it.printf(160, 122, id(font_timer), Color(255,60,0), TextAlign::CENTER, "ERROR");
-          it.printf(160, 158, id(font_response), Color(200,80,0), TextAlign::CENTER, "CHECK SYSTEM");
+          draw_arc(160, 125, 42, 0, 359, Color(255,60,0), 4);
+          draw_arc(160, 125, 54, 0, 359, Color(180,30,0), 3);
+          it.printf(160, 125, id(font_response), Color(255,60,0), TextAlign::CENTER, "ERROR");
+          it.printf(160, 195, id(font_response), Color(200,80,0), TextAlign::CENTER, "CHECK SYSTEM");
       - id: no_ha_page
         lambda: |-
           auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick) {
@@ -910,9 +910,9 @@ display:
           it.line(0, 24, 320, 24, Color(0,34,51));
           it.printf(6, 16, id(font_response), Color(0,200,255), TextAlign::BASELINE_LEFT, "V.I.K.I");
           it.printf(160, 16, id(font_response), Color(255,140,0), TextAlign::BASELINE_CENTER, "NO HA");
-          draw_arc(160, 130, 50, 0, 359, Color(255,140,0), 4);
-          it.printf(160, 122, id(font_timer), Color(255,140,0), TextAlign::CENTER, "NO HA");
-          it.printf(160, 158, id(font_response), Color(200,100,0), TextAlign::CENTER, "CONNECTING...");
+          draw_arc(160, 125, 42, 0, 359, Color(255,140,0), 4);
+          it.printf(160, 125, id(font_response), Color(255,140,0), TextAlign::CENTER, "NO HA");
+          it.printf(160, 195, id(font_response), Color(200,100,0), TextAlign::CENTER, "CONNECTING...");
       - id: no_wifi_page
         lambda: |-
           auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick) {
@@ -924,9 +924,9 @@ display:
           it.line(0, 24, 320, 24, Color(0,34,51));
           it.printf(6, 16, id(font_response), Color(0,200,255), TextAlign::BASELINE_LEFT, "V.I.K.I");
           it.printf(160, 16, id(font_response), Color(255,60,60), TextAlign::BASELINE_CENTER, "NO WIFI");
-          draw_arc(160, 130, 50, 0, 359, Color(255,60,60), 4);
-          it.printf(160, 122, id(font_timer), Color(255,60,60), TextAlign::CENTER, "NO WIFI");
-          it.printf(160, 158, id(font_response), Color(200,40,40), TextAlign::CENTER, "CHECK NETWORK");
+          draw_arc(160, 125, 42, 0, 359, Color(255,60,60), 4);
+          it.printf(160, 125, id(font_response), Color(255,60,60), TextAlign::CENTER, "NO WIFI");
+          it.printf(160, 195, id(font_response), Color(200,40,40), TextAlign::CENTER, "CHECK NETWORK");
       - id: initializing_page
         lambda: |-
           auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick) {
@@ -938,10 +938,10 @@ display:
           it.line(0, 24, 320, 24, Color(0,34,51));
           it.printf(6, 16, id(font_response), Color(0,200,255), TextAlign::BASELINE_LEFT, "V.I.K.I");
           it.printf(160, 16, id(font_response), Color(0,136,170), TextAlign::BASELINE_CENTER, "INITIALIZING");
-          draw_arc(160, 130, 50, 0, 359, Color(0,160,255), 4);
-          draw_arc(160, 130, 62, 0, 359, Color(0,100,180), 3);
-          it.printf(160, 118, id(font_timer), Color(0,180,255), TextAlign::CENTER, "V.I.K.I");
-          it.printf(160, 158, id(font_response), Color(0,140,200), TextAlign::CENTER, "INITIALIZING...");
+          draw_arc(160, 125, 42, 0, 359, Color(0,160,255), 4);
+          draw_arc(160, 125, 54, 0, 359, Color(0,100,180), 3);
+          it.printf(160, 125, id(font_response), Color(0,180,255), TextAlign::CENTER, "V.I.K.I");
+          it.printf(160, 195, id(font_response), Color(0,140,200), TextAlign::CENTER, "INITIALIZING...");
       - id: muted_page
         lambda: |-
           auto draw_arc = [&](int cx, int cy, int r, int sa, int ea, Color col, int thick) {
@@ -953,11 +953,12 @@ display:
           it.line(0, 24, 320, 24, Color(0,34,51));
           it.printf(6, 16, id(font_response), Color(0,200,255), TextAlign::BASELINE_LEFT, "V.I.K.I");
           it.printf(160, 16, id(font_response), Color(80,80,80), TextAlign::BASELINE_CENTER, "MUTED");
-          draw_arc(160, 130, 50, 0, 359, Color(60,60,60), 3);
-          it.printf(160, 122, id(font_timer), Color(80,80,80), TextAlign::CENTER, "MUTED");
-          it.printf(160, 158, id(font_response), Color(60,60,60), TextAlign::CENTER, "MICROPHONE OFF");
+          draw_arc(160, 125, 42, 0, 359, Color(60,60,60), 3);
+          it.printf(160, 125, id(font_response), Color(80,80,80), TextAlign::CENTER, "MUTED");
+          it.printf(160, 195, id(font_response), Color(60,60,60), TextAlign::CENTER, "MICROPHONE OFF");
           id(draw_timer_timeline).execute();
           id(draw_active_timer_widget).execute();
+
 
 
 
